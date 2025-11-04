@@ -23,7 +23,7 @@ A distributed microservices voting application deployed on AWS EC2 instances usi
 cd terraform
 terraform init
 terraform apply
-
+´´´
 
 ### 2. Manual Configuration Required ⚠️
 After Terraform completes, you MUST update the IP addresses in the Ansible playbooks:
