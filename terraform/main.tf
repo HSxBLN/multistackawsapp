@@ -15,13 +15,13 @@ module "vpc" {
 
 
 # SSH Key Pairs
-# Erster Key für Bastion Host Zugriff (Instance A)
+# First Key Bastion Host (Instance A)
 resource "aws_key_pair" "bastion_key" {
   key_name   = "hauke-pub-deployer-key"
   public_key = file("~/.ssh/aws_key.pub") 
 }
 
-# Zweiter Key für Bastion→Backend Kommunikation (Instance B und C)
+# Second Key Bastion→Backend (Instance B and C)
 resource "aws_key_pair" "backend_key" {
   key_name   = "hauke-private-backend-key"
   public_key = file("~/.ssh/aws_key_private.pub")
