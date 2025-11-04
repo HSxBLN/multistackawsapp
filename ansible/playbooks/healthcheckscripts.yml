@@ -1,0 +1,50 @@
+---
+- hosts: postgres_instance, worker_redis_instance
+  become: yes
+  tasks:
+    - name: Create healthchecks directory
+      file:
+        path: /opt/voting-app/healthchecks
+        state: directory
+
+    - name: Copy postgres healthcheck script
+      copy:
+        content: |
+          #!/bin/bash
+          set -eo pipefail
+
+          host="$(hostname -i || echo '127.0.0.1')"
+          user="${POSTGRES_USER:-postgres}"
+          db="${POSTGRES_DB:-$POSTGRES_USER}"
+          export PGPASSWORD="${POSTGRES_PASSWORD:-}"
+
+          args=(
+            --host "$host"
+            --username "$user" 
+            --dbname "$db"
+            --quiet --no-align --tuples-only
+          )
+
+          if select="$(echo 'SELECT 1' | psql "${args[@]}")" && [ "$select" = '1' ]; then
+            exit 0
+          fi
+
+          exit 1
+        dest: /opt/voting-app/healthchecks/postgres.sh
+        mode: 0755
+
+    - name: Copy redis healthcheck script  
+      copy:
+        content: |
+          #!/bin/sh
+          set -eo pipefail
+
+          host="$(hostname -i || echo '127.0.0.1')"
+
+          if ping="$(redis-cli -h "$host" ping)" && [ "$ping" = 'PONG' ]; then
+            exit 0
+          fi
+
+          exit 1
+        dest: /opt/voting-app/healthchecks/redis.sh
+        mode: 0755

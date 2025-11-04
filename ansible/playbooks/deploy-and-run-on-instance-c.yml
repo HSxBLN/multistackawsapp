@@ -1,0 +1,26 @@
+- name: Deploy PostgreSQL on Instance C
+  hosts: postgres_instance
+  become: yes
+  tasks:
+    - name: Pull PostgreSQL image
+      docker_image:
+        name: "postgres:15-alpine"
+        source: pull
+
+    - name: Run PostgreSQL container
+      docker_container:
+        name: postgres
+        image: postgres:15-alpine
+        state: started
+        healthcheck:
+          test: /healthchecks/postgres.sh  # Verwendet das kopierte Script
+          interval: 5s
+        env:
+          POSTGRES_USER: "postgres"
+          POSTGRES_PASSWORD: "postgres"
+          POSTGRES_DB: "postgres"
+        volumes:
+          - "pg_data:/var/lib/postgresql/data"
+          - "/opt/voting-app/healthchecks:/healthchecks"  # WICHTIG!
+        ports:
+          - "5432:5432"

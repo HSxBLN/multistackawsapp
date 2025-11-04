@@ -1,0 +1,49 @@
+- name: Deploy Vote and Result on Instance A
+  hosts: vote_result_instance
+  become: yes
+  vars:
+    redis_host: "10.2.2.80"
+    postgres_host: "10.2.3.167"
+
+  tasks:
+    - name: Pull images
+      docker_image:
+        name: "{{ item }}"
+        source: pull
+      loop:
+        - "moshootare/vote:latest"
+        - "moshootare/result:latest"
+
+    - name: Add db host entry to point to postgresql Instance
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ postgres_host }} db"
+        state: present
+    - name: Run Vote container
+      docker_container:
+        name: vote
+        image: moshootare/vote:latest
+        state: started
+        restart_policy: always
+        restart: yes
+        ports:
+          - "8080:80"
+        env:
+          REDIS_HOST: "{{ redis_host }}"
+          REDIS_PORT: "6379"
+
+    - name: Run Result container  
+      docker_container:
+        name: result
+        image: moshootare/result:latest
+        state: started
+        etc_hosts:
+          "db": "{{ postgres_host }}"
+        ports:
+          - "8081:80" 
+        env:
+          POSTGRES_HOST: "{{ postgres_host }}" 
+          POSTGRES_USER: "postgres"
+          POSTGRES_PASSWORD: "postgres"
+          POSTGRES_DB: "postgres"
+        restart_policy: always

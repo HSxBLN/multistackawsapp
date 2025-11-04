@@ -1,0 +1,49 @@
+- name: Deploy Redis and Worker on Instance B
+  hosts: worker_redis_instance
+  become: yes
+  vars:
+    postgres_host: "10.2.3.167"
+
+  tasks:
+    - name: Pull images
+      docker_image:
+        name: "{{ item }}"
+        source: pull
+      loop:
+        - "redis:alpine"
+        - "moshootare/worker:latest"
+    - name: Create docker network
+      docker_network:
+        name: app-network
+        state: present
+    - name: Run Redis container
+      docker_container:
+        name: redis
+        image: redis:alpine
+        state: started
+        volumes:
+          - "/opt/voting-app/healthchecks:/healthchecks" 
+        healthcheck: 
+          test: /healthchecks/redis.sh  
+          interval: 5s
+        networks:
+        - name: app-network
+        ports:
+          - "6379:6379"
+    - name: Add db host entry to point to postgresql Instance
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ postgres_host }} db"
+        state: present
+    - name: Run Worker container
+      docker_container:
+        name: worker
+        image: moshootare/worker:latest
+        state: started
+        env:
+          DB_HOST: "{{ postgres_host }}"
+          REDIS_HOST: "redis"
+          REDIS_PORT: "6379"
+        restart_policy: always
+        networks:
+          - name: app-network

@@ -1,0 +1,13 @@
+---
+- name: Install Docker
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update apt package index
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Install Docker if not present
+      ansible.builtin.package:
+        name: docker.io
+        state: present

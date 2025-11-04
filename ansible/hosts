@@ -1,0 +1,8 @@
+[vote_result_instance]
+instance_a
+
+[worker_redis_instance] 
+instance_b
+
+[postgres_instance]
+instance_c
