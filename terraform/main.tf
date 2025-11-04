@@ -1,5 +1,14 @@
 # Ironhack Lab 1 - Terraform VPC and EC2 Instance
-
+# Backenend: S3 Bucket for State Management
+terraform {
+  backend "s3" {
+    bucket         = "hauke-ironhack-lab1-state-bucketv2"
+    key            = "main/terraform.tfstate"
+    region         = "us-west-2"
+    use_lockfile   = true            
+    encrypt        = true
+  }
+}
 # VPC + Subnets Module
 module "vpc" {
   source = "./modules/vpc"

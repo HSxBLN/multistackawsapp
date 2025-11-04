@@ -6,6 +6,7 @@
 
 # Local .terraform directories
 terraform/.terraform/*
+terraform-backend/.terraform/*
 
 # .tfstate files
 *.tfstate
@@ -43,7 +44,14 @@ secrets.auto.tfvars
 # Ansible Secrets
 ansible/vault_password
 ansible/group_vars/all/vaultterraform/.terraform/
+
 terraform/*.tfstate
 terraform/*.tfstate.*
 terraform/.terraform.lock.hcl
 terraform/terraform.tfvars
+
+
+terraform-backend/*.tfstate
+terraform-backend/*.tfstate.*
+terraform-backend/.terraform.lock.hcl
+terraform-backend/terraform.tfvars

@@ -20,9 +20,18 @@ A distributed microservices voting application deployed on AWS EC2 instances usi
 ### 1. Infrastructure Setup
 
 ```bash
-cd terraform
+cd terraform-backend
 terraform init
 terraform apply
+cd ../terraform
+terraform init
+terraform apply
+```
+
+For quick SSH Setup use
+
+```bash
+terraform output -raw ssh_config >> ~/.ssh/config
 ```
 
 ### 2. Manual Configuration Required ⚠️

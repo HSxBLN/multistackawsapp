@@ -13,7 +13,7 @@
         image: postgres:15-alpine
         state: started
         healthcheck:
-          test: /healthchecks/postgres.sh  # Verwendet das kopierte Script
+          test: /healthchecks/postgres.sh
           interval: 5s
         env:
           POSTGRES_USER: "postgres"
@@ -21,6 +21,6 @@
           POSTGRES_DB: "postgres"
         volumes:
           - "pg_data:/var/lib/postgresql/data"
-          - "/opt/voting-app/healthchecks:/healthchecks"  # WICHTIG!
+          - "/opt/voting-app/healthchecks:/healthchecks"
         ports:
           - "5432:5432"
