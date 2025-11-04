@@ -50,9 +50,11 @@ cd ../ansible
 
 ### Deploy in correct order:
 ```bash
-ansible-playbook -i hosts playbooks/deploy_instance_c.yml    # PostgreSQL first
-ansible-playbook -i hosts playbooks/deploy_instance_b.yml    # Redis + Worker
-ansible-playbook -i hosts playbooks/deploy_instance_a.yml    # Vote + Result last
+ansible-playbook -i hosts playbooks/install-docker-on-all.ym # Install Docker-Engine on all Intances
+ansible-playbook -i hosts playbooks/healthcheckscripts.yml   # Copy Healthcheck Scripts into containers
+ansible-playbook -i hosts playbooks/deploy_instance_c.yml    # PostgreSQL First EC2 Instance
+ansible-playbook -i hosts playbooks/deploy_instance_b.yml    # Redis + Worker Second EC2 Instance
+ansible-playbook -i hosts playbooks/deploy_instance_a.yml    # Vote + Result Last EC2 Instance
 ```
 
 ### 🌐 Access the Application
