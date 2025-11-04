@@ -24,8 +24,8 @@ cd terraform
 terraform init
 terraform apply
 
-W
-2. Manual Configuration Required ⚠️
+
+### 2. Manual Configuration Required ⚠️
 After Terraform completes, you MUST update the IP addresses in the Ansible playbooks:
 
 In ansible/playbooks/deploy_instance_b.yml:
@@ -43,7 +43,8 @@ Get IPs from Terraform output:
 
 bash
 terraform output
-3. Deploy Application
+
+### 3. Deploy Application
 bash
 cd ../ansible
 
