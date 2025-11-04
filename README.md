@@ -23,7 +23,7 @@ A distributed microservices voting application deployed on AWS EC2 instances usi
 cd terraform
 terraform init
 terraform apply
-´´´
+```
 
 ### 2. Manual Configuration Required ⚠️
 After Terraform completes, you MUST update the IP addresses in the Ansible playbooks:
@@ -48,43 +48,33 @@ terraform output
 bash
 cd ../ansible
 
-# Deploy in correct order:
+### Deploy in correct order:
+```bash
 ansible-playbook -i hosts playbooks/deploy_instance_c.yml    # PostgreSQL first
 ansible-playbook -i hosts playbooks/deploy_instance_b.yml    # Redis + Worker
 ansible-playbook -i hosts playbooks/deploy_instance_a.yml    # Vote + Result last
-🌐 Access the Application
+```
+
+### 🌐 Access the Application
 After deployment, access the applications at:
 
 Vote App: http://[INSTANCE_A_PUBLIC_IP]:8080
 
 Result App: http://[INSTANCE_A_PUBLIC_IP]:8081
 
-🔧 Manual Steps Summary
-Run terraform apply
+### 🔧 Manual Steps Summary
+1. Run terraform apply
+2. Note the IPs from terraform output
+3. Update IPs in Ansible playbooks
+4. Run Ansible playbooks in order: C → B → A
+5. Test the applications
 
-Note the IPs from terraform output
-
-Update IPs in Ansible playbooks
-
-Run Ansible playbooks in order: C → B → A
-
-Test the applications
-
-🗑️ Cleanup
-bash
+### 🗑️ Cleanup
+```bash
 terraform destroy
-⚠️ Known Issues
-Manual IP configuration required between Terraform and Ansible
+```
 
-First-time deployment may require manual database schema creation
-
-Healthchecks may need manual intervention on initial setup
-
-📁 Project Structure
-text
-├── terraform/          # Infrastructure as Code
-├── ansible/
-│   ├── hosts           # Ansible inventory
-│   └── playbooks/      # Deployment scripts
-└── README.md
-Note: This is a learning project with simplified manual steps for educational purposes.
+### ⚠️ Known Issues
+- Manual IP configuration required between Terraform and Ansible
+- First-time deployment may require manual database schema creation
+- Healthchecks may need manual intervention on initial setup
